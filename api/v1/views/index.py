@@ -18,7 +18,7 @@ def stats():
         "amenities": classes.get("Amenity", 0),
         "cities": classes.get("City", 0),
         "places": classes.get("Place", 0),
-        "reviews": classes.get("Reviews", 0),
+        "reviews": classes.get("Review", 0),
         "states": classes.get("State", 0),
         "users": classes.get("User", 0)
     }
