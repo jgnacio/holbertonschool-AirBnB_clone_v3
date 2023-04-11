@@ -14,5 +14,15 @@ def status():
 @app_views.route("/stats", strict_slashes=False)
 def stats():
     """Get the number of instances of each class."""
-    return {cls_key: storage.count(cls_obj) for cls_key,
-            cls_obj in classes.items()}
+    stats_dict = {
+        "amenities": classes.get("Amenity", 0),
+        "cities": classes.get("City", 0),
+        "places": classes.get("Place", 0),
+        "reviews": classes.get("Reviews", 0),
+        "states": classes.get("State", 0),
+        "users": classes.get("User", 0)
+    }
+    stats_dict = {cls_key: storage.count(cls_obj) for cls_key,
+                  cls_obj in stats_dict.items()}
+
+    return stats_dict
