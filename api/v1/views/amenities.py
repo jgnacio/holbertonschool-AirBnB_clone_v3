@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""Endpoints for the state class."""
+"""Endpoints for the Amenity class."""
 from flask import abort
 from flask import jsonify
 from flask import request
@@ -12,7 +12,7 @@ from console import classes
 def get_all_amenities():
     """Return a list of all amenities."""
     amenities_list = [amenity.to_dict()
-                   for amenity in storage.all(classes["Amenity"]).values()]
+                      for amenity in storage.all(classes["Amenity"]).values()]
     if amenities_list is not None:
         return jsonify(amenities_list)
     else:
@@ -23,8 +23,8 @@ def get_all_amenities():
 def get_amenity_by_id(amenity_id):
     """Return a amenity by its id."""
     all_amenity = storage.all(classes["Amenity"])
-    if f"State.{amenity_id}" in all_amenity:
-        return jsonify(all_amenity[f"State.{amenity_id}"].to_dict())
+    if f"Amenity.{amenity_id}" in all_amenity:
+        return jsonify(all_amenity[f"Amenity.{amenity_id}"].to_dict())
     else:
         abort(404)
 
@@ -59,7 +59,8 @@ def create_amenity():
         abort(400, "Not a JSON")
 
 
-@app_views.route("/amenities/<amenity_id>", methods=["PUT"], strict_slashes=False)
+@app_views.route("/amenities/<amenity_id>", methods=["PUT"],
+                 strict_slashes=False)
 def update_amenity(amenity_id):
     """Update the atributes of a amenity instance."""
     amenity_instance = storage.get(classes["Amenity"], amenity_id)
