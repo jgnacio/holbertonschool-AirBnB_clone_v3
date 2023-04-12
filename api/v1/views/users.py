@@ -47,21 +47,20 @@ def create_user():
     """Create a new User."""
     try:
         req = request.get_json()
+        if "email" in req:
+            if "password" in req:
+                user_instance = classes["User"]()
+                user_instance.email = req["email"]
+                user_instance.password = req["password"]
+                storage.new(user_instance)
+                storage.save()
+                return user_instance.to_dict(), 201
+            else:
+                abort(400, "Missing password")
+        else:
+            abort(400, "Missing email")
     except:
         abort(400, "Not a JSON")
-
-    if "email" in req:
-        if "password" in req:
-            user_instance = classes["User"]()
-            user_instance.email = req["email"]
-            user_instance.password = req["password"]
-            storage.new(user_instance)
-            storage.save()
-            return user_instance.to_dict(), 201
-        else:
-            abort(400, "Missing password")
-    else:
-        abort(400, "Missing email")
 
 
 @app_views.route("/users/<user_id>", methods=["PUT"],
