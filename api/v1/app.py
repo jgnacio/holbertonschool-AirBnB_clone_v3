@@ -31,4 +31,4 @@ if __name__ == '__main__':
     if api_port is None:
         api_port = "5000"
 
-    app.run(host=api_host, port=api_port, threaded=True, debug=True)
+    app.run(host=api_host, port=api_port, threaded=True)
