@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""Cities handler"""
 from api.v1.views import app_views
 from models import storage
 from models.state import State
@@ -8,6 +9,7 @@ from json import dumps
 
 @app_views.route("/states/<state_id>/cities", strict_slashes=False)
 def cities_in_state(state_id):
+    """ Returns all cities with the given state id """
     key_list = []
     for key in storage.all(State).keys():
         key_list.append(key.split('.')[1])
@@ -22,6 +24,7 @@ def cities_in_state(state_id):
 
 @app_views.route("/cities/<city_id>", strict_slashes=False)
 def city_get(city_id):
+    """ Returns city """
     key_list = []
     for key in storage.all(City).keys():
         key_list.append(key.split('.')[1])
@@ -32,6 +35,7 @@ def city_get(city_id):
 
 @app_views.route("/cities/<city_id>", methods=["DELETE"], strict_slashes=False)
 def city_delete(city_id):
+    """ Deletes city based on id """
     key_list = []
     for key in storage.all(City).keys():
         key_list.append(key.split('.')[1])
@@ -44,6 +48,7 @@ def city_delete(city_id):
 
 @app_views.route("/states/<state_id>/cities", methods=["POST"], strict_slashes=False)
 def city_create(state_id):
+    """ Creates a new city with given state id """
     try:
         city_request = request.get_json()
         city_id = city_request.get('city_id')
@@ -66,6 +71,7 @@ def city_create(state_id):
 
 @app_views.route("/cities/<city_id>", methods=["PUT"], strict_slashes=False)
 def city_update(city_id):
+    """ Updates city with given id """
     try:
         city_request = request.get_json()
         key_list = []
