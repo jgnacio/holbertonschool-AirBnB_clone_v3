@@ -12,7 +12,10 @@ def get_all_states():
     """Return a list of all states."""
     states_list = [state.to_dict()
                    for state in storage.all(classes.get("State", 0)).values()]
-    return states_list
+    if states_list is not None:
+        return states_list
+    else:
+        return [] 
 
 
 @app_views.route("/states/<state_id>", strict_slashes=False)
