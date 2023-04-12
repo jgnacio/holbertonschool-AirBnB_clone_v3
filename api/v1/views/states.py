@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """Endpoints for the state class."""
 from flask import abort
+from flask import jsonify
 from flask import request
 from api.v1.views import app_views
 from models import storage
@@ -13,9 +14,9 @@ def get_all_states():
     states_list = [state.to_dict()
                    for state in storage.all(classes.get("State", 0)).values()]
     if states_list is not None:
-        return states_list
+        return jsonify(states_list)
     else:
-        return [] 
+        return jsonify([])
 
 
 @app_views.route("/states/<state_id>", strict_slashes=False)
@@ -23,7 +24,7 @@ def get_state_by_id(state_id):
     """Return a state by its id."""
     all_state = storage.all(classes["State"])
     if f"State.{state_id}" in all_state:
-        return all_state[f"State.{state_id}"].to_dict()
+        return jsonify(all_state[f"State.{state_id}"].to_dict())
     else:
         abort(404)
 
@@ -36,7 +37,7 @@ def delete(state_id):
     if obj_to_delete:
         storage.delete(obj_to_delete)
         storage.save()
-        return {}, 200
+        return jsonify({}), 200
     else:
         abort(404)
 
@@ -69,7 +70,7 @@ def update_state(state_id):
                 if key != "id" and key != "created_at" and key != "updated_at":
                     setattr(state_instance, key, value)
             state_instance.save()
-            return state_instance.to_dict(), 200
+            return jsonify(state_instance.to_dict()), 200
         except:
             abort(400, "Not a JSON")
     else:
