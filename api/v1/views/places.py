@@ -56,17 +56,23 @@ def place_create(city_id):
         abort(404)
     try:
         req = request.get_json()
-        if "name" in req:
-            place_instance = classes["Place"]()
-            place_instance.name = req["name"]
-            place_instance.state_id = city_id
-            storage.new(place_instance)
-            storage.save()
-            return place_instance.to_dict(), 201
-        else:
-            abort(400, "Missing name")
     except:
         abort(400, "Not a JSON")
+    if "user_id" not in req:
+        abort(400, "Missing user_id")
+    user_list = storage.all(classes["User"])
+    if f"User.{user_id}" not in user_list:
+        abort(404)
+    if "name" in req:
+        place_instance = classes["Place"]()
+        place_instance.name = req["name"]
+        place_instance.city_id = city_id
+        place_instance.user_id = req["user_id"]
+        storage.new(place_instance)
+        storage.save()
+        return place_instance.to_dict(), 201
+    else:
+        abort(400, "Missing name")
 
 
 @app_views.route("/places/<place_id>", methods=["PUT"], strict_slashes=False)
