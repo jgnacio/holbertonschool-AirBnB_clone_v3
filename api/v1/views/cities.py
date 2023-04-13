@@ -61,7 +61,7 @@ def city_create(state_id):
         else:
             abort(400, "Missing name")
     except:
-        abort(404, "Not a JSON")
+        abort(400, "Not a JSON")
 
 @app_views.route("/cities/<city_id>", methods=["PUT"], strict_slashes=False)
 def city_update(city_id):
