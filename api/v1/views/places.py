@@ -14,8 +14,8 @@ def places_in_city(city_id):
         abort(404)
     else:
         places_list = []
-        all_places = [place.to_dict()
-                    for place in storage.all(classes.get("Place", 0)).values()]
+        all_places = [plac.to_dict()
+                      for plac in storage.all(classes.get("Place", 0)).values()]
         for place in all_places:
             if place.get("city_id") == city_id:
                 places_list.append(place)
@@ -35,7 +35,8 @@ def place_get(place_id):
         abort(404)
 
 
-@app_views.route("/places/<place_id>", methods=["DELETE"], strict_slashes=False)
+@app_views.route("/places/<place_id>",
+                 methods=["DELETE"], strict_slashes=False)
 def place_delete(place_id):
     """ Deletes a Place object from the storage. """
     obj_to_delete = storage.get(classes["Place"], place_id)
@@ -61,13 +62,14 @@ def place_create(city_id):
     if "user_id" not in req:
         abort(400, "Missing user_id")
     user_list = storage.all(classes["User"])
+    user_id = req["user_id"]
     if f"User.{user_id}" not in user_list:
         abort(404)
     if "name" in req:
         place_instance = classes["Place"]()
         place_instance.name = req["name"]
         place_instance.city_id = city_id
-        place_instance.user_id = req["user_id"]
+        place_instance.user_id = user_id
         storage.new(place_instance)
         storage.save()
         return place_instance.to_dict(), 201
