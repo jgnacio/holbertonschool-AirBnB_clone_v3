@@ -5,6 +5,7 @@ from api.v1.views import app_views
 from models import storage
 from console import classes
 
+
 @app_views.route("/states/<state_id>/cities", strict_slashes=False)
 def cities_in_state(state_id):
     """ Returns all cities with the given state id """
@@ -14,7 +15,7 @@ def cities_in_state(state_id):
     else:
         city_list = []
         all_city = [city.to_dict()
-                     for city in storage.all(classes.get("City", 0)).values()]
+                    for city in storage.all(classes.get("City", 0)).values()]
         for city in all_city:
             if city.get("state_id") == state_id:
                 city_list.append(city)
@@ -22,6 +23,7 @@ def cities_in_state(state_id):
             return jsonify(city_list)
         else:
             return jsonify([])
+
 
 @app_views.route("/cities/<city_id>", strict_slashes=False)
 def city_get(city_id):
@@ -31,6 +33,7 @@ def city_get(city_id):
         return jsonify(all_city[f"City.{city_id}"].to_dict())
     else:
         abort(404)
+
 
 @app_views.route("/cities/<city_id>", methods=["DELETE"], strict_slashes=False)
 def city_delete(city_id):
@@ -43,14 +46,16 @@ def city_delete(city_id):
     else:
         abort(404)
 
-@app_views.route("/states/<state_id>/cities", methods=["POST"], strict_slashes=False)
+
+@app_views.route("/states/<state_id>/cities", methods=["POST"],
+                 strict_slashes=False)
 def city_create(state_id):
     """ Creates a new city with given state id """
+    state_list = storage.all(classes["State"])
+    if f"State.{state_id}" not in state_list:
+        abort(404)
     try:
         req = request.get_json()
-        state_list = storage.all(classes["State"])
-        if f"State.{state_id}" not in state_list:
-            abort(404)
         if "name" in req:
             city_instance = classes["City"]()
             city_instance.name = req["name"]
@@ -62,6 +67,7 @@ def city_create(state_id):
             abort(400, "Missing name")
     except:
         abort(400, "Not a JSON")
+
 
 @app_views.route("/cities/<city_id>", methods=["PUT"], strict_slashes=False)
 def city_update(city_id):
