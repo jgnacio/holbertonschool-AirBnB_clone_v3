@@ -46,19 +46,22 @@ def city_delete(city_id):
 @app_views.route("/states/<state_id>/cities", methods=["POST"], strict_slashes=False)
 def city_create(state_id):
     """ Creates a new city with given state id """
-    req = request.get_json()
-    state_list = storage.all(classes["State"])
-    if f"State.{state_id}" not in state_list:
-        abort(404)
-    if "name" in req:
-        city_instance = classes["City"]()
-        city_instance.name = req["name"]
-        city_instance.state_id = state_id
-        storage.new(city_instance)
-        storage.save()
-        return city_instance.to_dict(), 201
-    else:
-        abort(400, "Missing name")
+    try:
+        req = request.get_json()
+        state_list = storage.all(classes["State"])
+        if f"State.{state_id}" not in state_list:
+            abort(404)
+        if "name" in req:
+            city_instance = classes["City"]()
+            city_instance.name = req["name"]
+            city_instance.state_id = state_id
+            storage.new(city_instance)
+            storage.save()
+            return city_instance.to_dict(), 201
+        else:
+            abort(400, "Missing name")
+    except:
+        abort(404, "Not a JSON")
 
 @app_views.route("/cities/<city_id>", methods=["PUT"], strict_slashes=False)
 def city_update(city_id):
