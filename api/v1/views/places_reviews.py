@@ -35,7 +35,7 @@ def review_get(review_id):
         abort(404)
 
 
-@app_views.route("/review/<review_id>",
+@app_views.route("/reviews/<review_id>",
                  methods=["DELETE"], strict_slashes=False)
 def review_delete(review_id):
     """ Deletes a Review object from the storage. """
@@ -55,9 +55,8 @@ def review_create(place_id):
     place_list = storage.all(classes["Place"])
     if f"Place.{place_id}" not in place_list:
         abort(404)
-    try:
-        req = request.get_json()
-    except:
+    req = request.get_json()
+    if req is None:
         abort(400, "Not a JSON")
     if "user_id" not in req:
         abort(400, "Missing user_id")
