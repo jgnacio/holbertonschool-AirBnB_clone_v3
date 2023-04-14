@@ -14,8 +14,8 @@ def reviews_in_place(place_id):
         abort(404)
     else:
         review_list = []
-        all_review = [rev.to_dict()
-                      for rev in storage.all(classes.get("Review", 0)).values()]
+        all_review = [rv.to_dict()
+                      for rv in storage.all(classes.get("Review", 0)).values()]
         for review in all_review:
             if review.get("place_id") == place_id:
                 review_list.append(review)
@@ -66,17 +66,11 @@ def review_create(place_id):
         abort(404)
     if "text" not in req:
         abort(400, "Missing text")
-    if "name" in req:
-        review_instance = classes["Review"]()
-        review_instance.name = req["name"]
-        review_instance.place_id = place_id
-        review_instance.user_id = user_id
-        review_instance.text = req["text"]
-        storage.new(review_instance)
-        storage.save()
-        return review_instance.to_dict(), 201
-    else:
-        abort(400, "Missing name")
+    review_instance = classes["Review"](**req)
+    review_instance.place_id = place_id
+    storage.new(review_instance)
+    storage.save()
+    return review_instance.to_dict(), 201
 
 
 @app_views.route("/reviews/<review_id>", methods=["PUT"], strict_slashes=False)
