@@ -14,8 +14,8 @@ def places_in_city(city_id):
         abort(404)
     else:
         places_list = []
-        all_places = [plac.to_dict()
-                      for plac in storage.all(classes.get("Place", 0)).values()]
+        all_places = [pla.to_dict()
+                      for pla in storage.all(classes.get("Place", 0)).values()]
         for place in all_places:
             if place.get("city_id") == city_id:
                 places_list.append(place)
@@ -55,9 +55,8 @@ def place_create(city_id):
     city_list = storage.all(classes["City"])
     if f"City.{city_id}" not in city_list:
         abort(404)
-    try:
-        req = request.get_json()
-    except:
+    req = request.get_json()
+    if req is None:
         abort(400, "Not a JSON")
     if "user_id" not in req:
         abort(400, "Missing user_id")
