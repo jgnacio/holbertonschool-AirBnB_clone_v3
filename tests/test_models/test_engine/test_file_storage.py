@@ -120,7 +120,8 @@ class TestFileStorage(unittest.TestCase):
         storage = FileStorage()
         new_state = State()
         storage.new(new_state)
-        get_state = storage.get(State, new_stade.id)
+        storage.save()
+        get_state = storage.get(State, new_state.id)
         self.assertEqual(new_state, get_state)
         
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
@@ -131,6 +132,7 @@ class TestFileStorage(unittest.TestCase):
         new_city = City()
         storage.new(new_state)
         storage.new(new_city)
+        storage.save()
         count1 = storage.count("State")
         count2 = storage.count()
         self.assertEqual(count1, 1)
